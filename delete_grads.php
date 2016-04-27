@@ -10,8 +10,8 @@
 <?php
  require('db.php');
 if (isset($_SESSION['type']) && $_SESSION['type']=='superuser'){
- if (isset($_POST['gradyear'])){
- $gradyear = $_POST['gradyear'];
+ if (isset($_POST['submit'])){
+ 
  
  $query = "CALL `gst_final`();";
  $result = mysql_query($query) or die(mysql_error());
@@ -25,10 +25,10 @@ if (isset($_SESSION['type']) && $_SESSION['type']=='superuser'){
 ?>
 <div class="form">
 <h1>Clean Up</h1>
-<h2>Enter in a graduation year and click Remove to delete all graduating student athletes from the database.</h2>
+<h2>Delete all graduating student athletes from the database.</h2>
 <form action="" method="post" name="deletegrads">
-<input type="text" name="gradyear" placeholder="Year" required />
-<input name="submit" type="submit" value="Remove" />
+
+<input name="submit" type="submit" value="Remove Grads" />
 </form>
 <p><a href='delete_data.php'>Back.</a></p>
 </div>
