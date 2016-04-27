@@ -13,7 +13,7 @@ if (isset($_SESSION['type']) && $_SESSION['type']=='superuser'){
  if (isset($_POST['submit'])){
  
  
- $query = "CALL `gst_final`();";
+ $query = "CALL `graduate_seniors`();";
  $result = mysql_query($query) or die(mysql_error());
  
  if($result){
