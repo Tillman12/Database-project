@@ -1,8 +1,10 @@
 <html>
+<head>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
 <body>
-<p>the page has loaded</p>
  <?php
- 	echo "I entered the php. ";
+ 	#echo "I entered the php. ";
 
 	require_once("./library.php"); // To connect to the database
  	$con = new mysqli($SERVER, $USERNAME, $PASSWORD, $DATABASE);
@@ -12,7 +14,7 @@
     	exit();
 	}
 
- 	echo "Connection is good. ";
+ 	#echo "Connection is good. ";
 
  	#Keep track of which fields have values
  	$school_filled = False;
@@ -38,7 +40,7 @@
  	$count = 0;
  	$stmt = "";
 
- 	echo "line 30 running smoothly. ";
+ 	#echo "line 30 running smoothly. ";
 
  	# Find out what data we have
  	if (htmlspecialchars($_POST['school']) != "") {
@@ -90,11 +92,11 @@
  		#echo $c_lname;
  	}
 
- 	echo "Took input properly, data is: school = " . $school . " state = " . $state . " gender = " . $gender . " sport = " . $sport . " player = " . $p_fname . " " . $p_lname . " coach = " . $c_fname . " " . $c_lname . ". ";
+ 	#echo "Took input properly, data is: school = " . $school . " state = " . $state . " gender = " . $gender . " sport = " . $sport . " player = " . $p_fname . " " . $p_lname . " coach = " . $c_fname . " " . $c_lname . ". ";
 
 	#if everything is empty can't look for anything
  	if ($count != 0) {
- 		echo "Count is " . $count . ". ";
+ 		#echo "Count is " . $count . ". ";
 
  		# Check for invalid queries
  		# Only player and coach needed, not a valid connection
@@ -102,14 +104,14 @@
  			echo "Please search for either a player or coach, not both. ";
  		} else {
  			#All queries involving schools
- 			echo "This is a good search. ";
+ 			#echo "This is a good search. ";
  			if (($school_filled || $state_filled) && ($p_lname_filled || $p_fname_filled) && ($sport_filled || $gender_filled)) {
  				#school, player, sport
- 				$stmt = "SELECT * FROM Schools NATURAL JOIN SchoolSports NATURAL JOIN Sports NATURAL JOIN PlayersSports NATURAL JOIN Players WHERE ";
+ 				$stmt = "SELECT * FROM Schools NATURAL JOIN SchoolRosters NATURAL JOIN Players NATURAL JOIN PlayersSports NATURAL JOIN SchoolSports WHERE ";
  				$stmt = assignValues($stmt, $school_filled, $state_filled, $sport_filled, $gender_filled, $p_fname_filled, $p_lname_filled, $c_fname_filled, $c_lname_filled, $school, $state, $sport, $gender, $p_fname, $p_lname, $c_fname, $c_lname);
  			} elseif (($school_filled || $state_filled) && ($c_lname_filled || $c_fname_filled) && ($sport_filled || $gender_filled)) {
  				#school, coach, sport
- 				$stmt = "SELECT * FROM Schools NATURAL JOIN SchoolSports NATURAL JOIN Sports NATURAL JOIN CoachSport NATURAL JOIN Coaches WHERE ";
+ 				$stmt = "SELECT * FROM Schools NATURAL JOIN CoachSchool NATURAL JOIN Coaches NATURAL JOIN CoachSport NATURAL JOIN SchoolSports WHERE ";
  				$stmt = assignValues($stmt, $school_filled, $state_filled, $sport_filled, $gender_filled, $p_fname_filled, $p_lname_filled, $c_fname_filled, $c_lname_filled, $school, $state, $sport, $gender, $p_fname, $p_lname, $c_fname, $c_lname);
  			} elseif (($school_filled || $state_filled) && ($p_lname_filled || $p_fname_filled)) {
  				#school, player
@@ -149,17 +151,58 @@
  				$stmt = assignValues($stmt, $school_filled, $state_filled, $sport_filled, $gender_filled, $p_fname_filled, $p_lname_filled, $c_fname_filled, $c_lname_filled, $school, $state, $sport, $gender, $p_fname, $p_lname, $c_fname, $c_lname);
  			}
 
- 			echo $stmt . ". ";
+ 			#echo $stmt . ". ";
 
  			if ($result = $con->query($stmt)){
- 				echo "this actually worked. ";
- 				echo "<br>";
+ 				#echo "this actually worked. ";
+ 				#echo "<br>";
+ 				echo "<table><tr>";
+
+ 				if ($school_filled || $state_filled)
+ 					echo "<th>school_name</th><th>state</th><th>city</th><th>colors</th>";
+ 				if ($sport_filled || $gender_filled)
+ 					echo "<th>sport_name</th><th>sport_gender</th>";
+ 				if (($school_filled || $state_filled) && ($sport_filled || $gender_filled))
+ 					echo "<th>division</th><th>conference</th>";
+ 				if ($p_fname_filled || $p_lname_filled)
+ 					echo "<th>Player First Name</th><th>Player Last Name</th><th>number</th><th>position</th><th>grad year</th>";
+ 				if ($c_fname_filled || $c_lname_filled)
+ 					echo "<th>Coach First Name</th><th>Coach Last Name</th><th>coach position</th><th>salary</th>";
+ 				echo "</tr>";
+
  				while ($row = mysqli_fetch_array($result)) {
-    				echo $row['sport_name'];
-    				echo " " . $row['sport_gender'];
-    				echo "<br>";
+ 					echo "<tr>";
+ 					if ($school_filled || $state_filled) {
+	 					echo "<td>" . $row['school_name'] . "</td>";
+	 					echo "<td>" . $row['state'] . "</td>";
+	 					echo "<td>" . $row['city'] . "</td>";
+	 					echo "<td>" . $row['colors'] . "</td>";
+ 					}
+ 					if ($sport_filled || $gender_filled) {
+	 					echo "<td>" . $row['sport_name'] . "</td>";
+	 					echo "<td>" . $row['sport_gender'] . "</td>";
+	 				}
+	 				if (($school_filled || $state_filled) && ($sport_filled || $gender_filled)) {
+	 					echo "<td>" . $row['division'] . "</td>";
+	 					echo "<td>" . $row['conference'] . "</td>";
+	 				}
+	 				if ($p_fname_filled || $p_lname_filled) {
+	 					echo "<td>" . $row['p_fname'] . "</td>";
+	 					echo "<td>" . $row['p_lname'] . "</td>";
+	 					echo "<td>" . $row['number'] . "</td>";
+	 					echo "<td>" . $row['position'] . "</td>";
+	 					echo "<td>" . $row['grad_year'] . "</td>";
+	 				}
+	 				if ($c_fname_filled || $c_lname_filled) {
+	 					echo "<td>" . $row['c_fname'] . "</td>";
+	 					echo "<td>" . $row['c_lname'] . "</td>";
+	 					echo "<td>" . $row['c_position'] . "</td>";
+	 					echo "<td>" . $row['salary'] . "</td>";
+	 				}
+    				echo "</tr>";
     			}
-    			echo "while loop done";
+    			echo "</table>";
+    			#echo "while loop done";
  			}
 
  		}
@@ -172,7 +215,6 @@
  	#outside to make things easier to track
  	function assignValues($stmt, $school_filled, $state_filled, $sport_filled, $gender_filled, $p_fname_filled, $p_lname_filled, $c_fname_filled, $c_lname_filled, $school, $state, $sport, $gender, $p_fname, $p_lname, $c_fname, $c_lname) {
  		#This function tells the query which values to look for in tables
-
  		if ($school_filled && $school != 'ALL')
  			$stmt = $stmt . "school_name = '" . $school . "', ";
  		if ($state_filled && $state != 'ALL')
@@ -189,8 +231,9 @@
  			$stmt = $stmt . "c_fname = '" . $c_fname . "', ";
  		if ($c_lname_filled && $c_lname != 'ALL')
  			$stmt = $stmt . "c_lname = '" . $c_lname . "', ";
-
  		#Checks if only an ALL is specified and no narrowing constriants (gets wid of WHERE in that case)
+ 		echo $stmt . "<br>";
+
  		if (($school == 'ALL' || !$school_filled) && ($state == 'ALL' || !$state_filled) && ($sport == 'ALL' || !$sport_filled) && ($gender == 'ALL' || !$gender_filled) && ($p_lname == 'ALL' || !$p_lname_filled) && ($p_fname == 'ALL' || !$p_fname_filled) && ($c_lname == 'ALL' || !$c_lname_filled) && ($c_fname == 'ALL' || !$c_fname_filled))
  			return substr($stmt, 0, -7);
  		else
