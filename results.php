@@ -151,7 +151,7 @@
  				$stmt = assignValues($stmt, $school_filled, $state_filled, $sport_filled, $gender_filled, $p_fname_filled, $p_lname_filled, $c_fname_filled, $c_lname_filled, $school, $state, $sport, $gender, $p_fname, $p_lname, $c_fname, $c_lname);
  			}
 
- 			#echo $stmt . ". ";
+ 			#echo  $stmt . ". ";
 
  			if ($result = $con->query($stmt)){
  				#echo "this actually worked. ";
@@ -216,28 +216,28 @@
  	function assignValues($stmt, $school_filled, $state_filled, $sport_filled, $gender_filled, $p_fname_filled, $p_lname_filled, $c_fname_filled, $c_lname_filled, $school, $state, $sport, $gender, $p_fname, $p_lname, $c_fname, $c_lname) {
  		#This function tells the query which values to look for in tables
  		if ($school_filled && $school != 'ALL')
- 			$stmt = $stmt . "school_name = '" . $school . "', ";
+ 			$stmt = $stmt . "school_name = '" . $school . "' && ";
  		if ($state_filled && $state != 'ALL')
- 			$stmt = $stmt . "state = '" . $state . "', ";
+ 			$stmt = $stmt . "state = '" . $state . "' && ";
  		if ($sport_filled && $sport != 'ALL')
- 			$stmt = $stmt . "sport_name = '" . $sport . "', ";
+ 			$stmt = $stmt . "sport_name = '" . $sport . "' && ";
  		if ($gender_filled && $gender != 'ALL')
- 			$stmt = $stmt . "sport_gender = '" . $gender . "', ";
+ 			$stmt = $stmt . "sport_gender = '" . $gender . "' && ";
  		if ($p_fname_filled && $p_fname != 'ALL')
- 			$stmt = $stmt . "p_fname = '" . $p_fname . "', ";
+ 			$stmt = $stmt . "p_fname = '" . $p_fname . "' && ";
  		if ($p_lname_filled && $p_lname != 'ALL')
- 			$stmt = $stmt . "p_lname = '" . $p_lname . "', ";
+ 			$stmt = $stmt . "p_lname = '" . $p_lname . "' && ";
  		if ($c_fname_filled && $c_fname != 'ALL')
- 			$stmt = $stmt . "c_fname = '" . $c_fname . "', ";
+ 			$stmt = $stmt . "c_fname = '" . $c_fname . "' && ";
  		if ($c_lname_filled && $c_lname != 'ALL')
- 			$stmt = $stmt . "c_lname = '" . $c_lname . "', ";
+ 			$stmt = $stmt . "c_lname = '" . $c_lname . "' && ";
  		#Checks if only an ALL is specified and no narrowing constriants (gets wid of WHERE in that case)
- 		echo $stmt . "<br>";
+ 		#echo $stmt . "<br>";
 
  		if (($school == 'ALL' || !$school_filled) && ($state == 'ALL' || !$state_filled) && ($sport == 'ALL' || !$sport_filled) && ($gender == 'ALL' || !$gender_filled) && ($p_lname == 'ALL' || !$p_lname_filled) && ($p_fname == 'ALL' || !$p_fname_filled) && ($c_lname == 'ALL' || !$c_lname_filled) && ($c_fname == 'ALL' || !$c_fname_filled))
  			return substr($stmt, 0, -7);
  		else
-			return substr($stmt, 0, -2);
+			return substr($stmt, 0, -4);
  	}
  ?>
 </body>
